@@ -55,43 +55,54 @@ class Urna {
     }
 }
 
-    //  Resultado da votação
-    public void exibirResultado() {
-        System.out.println("\nResultado da Eleição:");
-        int maiorVoto = 0;
-        List<Candidato> vencedores = new ArrayList<>();
+public void exibirResultado() {
+    System.out.println("\nResultado da Eleição:");
+    
+    int totalVotos = 0;
+    for (int votosCandidato : votos.values()) {
+        totalVotos += votosCandidato;
+    }
 
-        for (Map.Entry<Integer, Candidato> entry : candidatos.entrySet()) {
-            int numero = entry.getKey();
-            Candidato candidato = entry.getValue();
-            int quantidadeVotos = votos.getOrDefault(numero, 0);
+    if (totalVotos == 0) {
+        System.out.println("Nenhum voto registrado.");
+        return;
+    }
 
-            System.out.println(candidato.getNome() + " (" + candidato.getNumero() + "): " + quantidadeVotos + " votos");
+    int maiorVoto = 0;
+    List<Candidato> vencedores = new ArrayList<>();
 
-            if (quantidadeVotos > maiorVoto) {
-                maiorVoto = quantidadeVotos;
-                vencedores.clear();
-                vencedores.add(candidato);
-            } else if (quantidadeVotos == maiorVoto) {
-                vencedores.add(candidato);
-            }
-        }
+    // Exibir os candidatos com seus votos e percentual
+    for (Map.Entry<Integer, Candidato> entry : candidatos.entrySet()) {
+        int numero = entry.getKey();
+        int quantidadeVotos = votos.getOrDefault(numero, 0);
+        double percentual = (quantidadeVotos * 100.0) / totalVotos;
 
-        // Exibir o vencedor ou o empate
-        if (vencedores.size() > 1) {
-            System.out.print("\nHouve um empate entre: ");
-            for (int i = 0; i < vencedores.size(); i++) {
-                System.out.print(vencedores.get(i).getNome());
-                if (i < vencedores.size() - 1) {
-                    System.out.print(", ");
-                }
-            }
-            System.out.println(" com " + maiorVoto + " votos cada.");
-        } else {
-            System.out.println("\nVencedor: " + vencedores.get(0).getNome() + " com " + maiorVoto + " votos!");
+        Candidato candidato = entry.getValue();
+        System.out.printf("%s (%d): %d votos (%.2f%%)%n", candidato.getNome(), candidato.getNumero(), quantidadeVotos, percentual);
+
+        if (quantidadeVotos > maiorVoto) {
+            maiorVoto = quantidadeVotos;
+            vencedores.clear();
+            vencedores.add(candidato);
+        } else if (quantidadeVotos == maiorVoto) {
+            vencedores.add(candidato);
         }
     }
 
+    // Exibir o vencedor ou empate
+    if (vencedores.size() > 1) {
+        System.out.print("\nHouve um empate entre: ");
+        for (int i = 0; i < vencedores.size(); i++) {
+            System.out.print(vencedores.get(i).getNome());
+            if (i < vencedores.size() - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println(" com " + maiorVoto + " votos cada.");
+    } else {
+        System.out.println("\nVencedor: " + vencedores.get(0).getNome() + " com " + maiorVoto + " votos!");
+    }
+}
     public void exibirCandidatos() {
         System.out.println("\nLista de Candidatos:");
         for (Candidato candidato : candidatos.values()) {
