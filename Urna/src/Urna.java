@@ -56,7 +56,9 @@ class Urna {
 }
 
 public void exibirResultado() {
-    System.out.println("\nResultado da Eleição:");
+    System.out.println("\n========================================");
+    System.out.println("          RESULTADO DA ELEIÇÃO          ");
+    System.out.println("========================================\n");
     
     int totalVotos = 0;
     for (int votosCandidato : votos.values()) {
@@ -100,11 +102,13 @@ public void exibirResultado() {
         }
         System.out.println(" com " + maiorVoto + " votos cada.");
     } else {
-        System.out.println("\nVencedor: " + vencedores.get(0).getNome() + " com " + maiorVoto + " votos!");
+        System.out.println("\n => Vencedor: " + vencedores.get(0).getNome() + " com " + maiorVoto + " votos!");
     }
 }
     public void exibirCandidatos() {
-        System.out.println("\nLista de Candidatos:");
+        System.out.println("\n========================================");
+        System.out.println("          LISTA DE CANDIDATOS           ");
+        System.out.println("========================================");
         for (Candidato candidato : candidatos.values()) {
             System.out.println(candidato.getNome() + " - Número: " + candidato.getNumero());
         }

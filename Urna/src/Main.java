@@ -6,11 +6,14 @@ public class Main {
         Urna urna = Urna.getInstance();
 
         while (true) {
-            System.out.println("\n--- Urna Eletrônica ---\n");
+            System.out.println("\n========================================");
+            System.out.println("       SISTEMA DE URNA ELETRÔNICA    ");
+            System.out.println("========================================");
             System.out.println("1. Votar");
             System.out.println("2. Resultado atual da votação");
             System.out.println("3. Lista de candidatos");
-            System.out.println("4. Sair \n");
+            System.out.println("4. Sair");
+            System.out.println("========================================\n");
             System.out.print("Escolha uma opção: ");
             
             String entrada = scanner.nextLine();
@@ -24,8 +27,10 @@ public class Main {
 
             switch (opcao) {
                 case 1:
+                    System.out.println("\n----------------------------------------");
                     System.out.print("Digite o número do candidato: ");
                     String entradaCandidato = scanner.nextLine();
+                    System.out.println("----------------------------------------\n");
                     int numeroCandidato;
 
                     try {
