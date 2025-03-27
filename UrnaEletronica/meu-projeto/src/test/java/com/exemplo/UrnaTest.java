@@ -1,38 +1,57 @@
 package com.exemplo;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.Scanner;
+import java.io.ByteArrayInputStream;
 
-/**
- * Unit test for simple App.
- */
-public class UrnaTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public UrnaTest( String testName )
-    {
-        super( testName );
+class UrnaTest {
+    private Urna urna;
+
+    @BeforeEach
+    void setUp() {
+        urna = Urna.getInstance();
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( UrnaTest.class );
+    @Test
+    void testEleitor(){
+        
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Test
+    void testInicializacaoCandidatos() {
+        assertNotNull(urna);
+        urna.exibirCandidatos(); // Apenas para depuração
+    }
+
+    @Test
+    void testVotoValido() {
+        String input = "S\n"; // Simular confirmação do voto
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        
+        urna.votar(5, scanner);
+        urna.exibirResultado();
+    }
+
+    @Test
+    void testVotoNulo() {
+        String input = "S\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        
+        urna.votar(99, scanner); // Número inválido
+        urna.exibirResultado();
+    }
+
+    @Test
+    void testVotoBranco() {
+        String input = "S\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        
+        urna.votar(0, scanner);
+        urna.exibirResultado();
     }
 }
