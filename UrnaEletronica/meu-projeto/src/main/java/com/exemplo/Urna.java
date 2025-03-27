@@ -1,3 +1,5 @@
+package com.exemplo;
+
 import java.util.Map;
 import java.util.Scanner;
 import java.util.ArrayList;

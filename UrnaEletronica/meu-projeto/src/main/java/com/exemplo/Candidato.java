@@ -1,4 +1,5 @@
-//classe com construtor que define o Candidato
+package com.exemplo;
+
 class Candidato {
     private String nome;
     private int numero;
