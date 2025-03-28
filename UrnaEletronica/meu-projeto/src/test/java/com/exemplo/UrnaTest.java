@@ -14,9 +14,31 @@ class UrnaTest {
         urna = Urna.getInstance();
     }
 
+    @BeforeEach
+    void setUp_Eleitor() {
+        Eleitor.registrarVoto("12345"); // Simulando que o eleitor "12345" já votou
+    }
+
+
     @Test
-    void testEleitor(){
-        
+    void testNovoVoto() {
+        // Testa se o eleitor pode votar quando ele ainda não votou
+        boolean podeVotar = Eleitor.podeVotar("13579");
+        assertTrue(podeVotar, "O eleitor deve poder votar.");
+    }
+
+    @Test
+    void testNaoPodeVotar() {
+        // Testa se o eleitor não pode votar quando ele já votou
+        boolean podeVotar = Eleitor.podeVotar("13579");
+        assertTrue(podeVotar, "O eleitor não deve poder votar novamente.");
+    }
+
+    @Test
+    void testVotoAdicionaEleitor() {
+        // Testa se o método de registrar voto adiciona o eleitor corretamente
+        Eleitor.registrarVoto("67890");
+        assertFalse(Eleitor.podeVotar("67890"), "O eleitor que já registrou voto não deve poder votar novamente.");
     }
 
     @Test
