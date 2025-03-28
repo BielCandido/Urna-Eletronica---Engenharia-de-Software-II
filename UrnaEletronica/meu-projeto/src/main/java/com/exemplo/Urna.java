@@ -2,8 +2,10 @@ package com.exemplo;
 
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 // Classe que define Urna, utilizando Singleton
@@ -13,10 +15,15 @@ class Urna {
     private Map<Integer, Integer> votos;
     private int votosBrancos;
     private int votosNulos;
+    private Set<String> eleitores;
+    private Set<String> eleitoresJaVotaram = new HashSet<>();
+    private Set<String> registeredVoters;
 
     private Urna() {
         candidatos = new HashMap<>();
         votos = new HashMap<>();
+        eleitores = new HashSet<>();
+        registeredVoters = new HashSet<>();
         votosBrancos = 0;
         votosNulos = 0;
         inicializarCandidatos();
@@ -29,6 +36,14 @@ class Urna {
         return instance;
     }
 
+    public boolean registrarEleitor(String idEleitor) {
+        if (registeredVoters.contains(idEleitor)) {
+            return false; // Eleitor já registrado
+        }
+        eleitores.add(idEleitor);
+        registeredVoters.add(idEleitor);
+        return true; // Eleitor registrado com sucesso
+    }
     // Povoamento de candidatos
     private void inicializarCandidatos() {
         candidatos.put(5, new Candidato("Cleber Coelho", 5));
@@ -43,37 +58,51 @@ class Urna {
     }
 
     // Registra voto com sistema de confirmação do eleitor
-    public void votar(int numeroCandidato, Scanner scanner) {
-        if (numeroCandidato == 0) {
-            System.out.println("Você votou em BRANCO.");
-            System.out.print("Confirmar voto? (S/N): ");
-            if (scanner.nextLine().trim().equalsIgnoreCase("S")) {
-                votosBrancos++;
-                System.out.println("Voto em branco confirmado.");
-            } else {
-                System.out.println("Voto cancelado. Escolha novamente.");
-            }
-        } else if (candidatos.containsKey(numeroCandidato)) {
-            Candidato candidato = candidatos.get(numeroCandidato);
-            System.out.println("Você votou em: " + candidato.getNome() + " (" + candidato.getNumero() + ")");
-            System.out.print("Confirmar voto? (S/N): ");
-            if (scanner.nextLine().trim().equalsIgnoreCase("S")) {
-                votos.put(numeroCandidato, votos.getOrDefault(numeroCandidato, 0) + 1);
-                System.out.println("Voto confirmado para: " + candidato.getNome());
-            } else {
-                System.out.println("Voto cancelado. Escolha novamente.");
-            }
+public void votar(String idEleitor, int numeroCandidato, Scanner scanner) {
+
+    if (eleitorJaVotou(idEleitor)) {
+        System.out.println("Erro: Este eleitor já votou.");
+        return;
+    }
+
+    if (numeroCandidato == 0) {
+        System.out.println("Você votou em BRANCO.");
+        System.out.print("Confirmar voto? (S/N): ");
+        if (scanner.nextLine().trim().equalsIgnoreCase("S")) {
+            votosBrancos++;
+            eleitoresJaVotaram.add(idEleitor);  // REGISTRAR ELEITOR
+            System.out.println("Voto em branco confirmado.");
         } else {
-            System.out.println("Número inválido! Seu voto será considerado NULO.");
-            System.out.print("Confirmar voto? (S/N): ");
-            if (scanner.nextLine().trim().equalsIgnoreCase("S")) {
-                votosNulos++;
-                System.out.println("Voto nulo confirmado.");
-            } else {
-                System.out.println("Voto cancelado. Escolha novamente.");
-            }
+            System.out.println("Voto cancelado. Escolha novamente.");
+        }
+    } else if (candidatos.containsKey(numeroCandidato)) {
+        Candidato candidato = candidatos.get(numeroCandidato);
+        System.out.println("Você votou em: " + candidato.getNome() + " (" + candidato.getNumero() + ")");
+        System.out.print("Confirmar voto? (S/N): ");
+        if (scanner.nextLine().trim().equalsIgnoreCase("S")) {
+            votos.put(numeroCandidato, votos.getOrDefault(numeroCandidato, 0) + 1);
+            eleitoresJaVotaram.add(idEleitor);  // REGISTRAR ELEITOR
+            System.out.println("Voto confirmado para: " + candidato.getNome());
+        } else {
+            System.out.println("Voto cancelado. Escolha novamente.");
+        }
+    } else {
+        System.out.println("Número inválido! Seu voto será considerado NULO.");
+        System.out.print("Confirmar voto? (S/N): ");
+        if (scanner.nextLine().trim().equalsIgnoreCase("S")) {
+            votosNulos++;
+            eleitoresJaVotaram.add(idEleitor);  // REGISTRAR ELEITOR
+            System.out.println("Voto nulo confirmado.");
+        } else {
+            System.out.println("Voto cancelado. Escolha novamente.");
         }
     }
+}
+
+// Corrigir a função de verificação de voto
+public boolean eleitorJaVotou(String idEleitor) {
+    return eleitoresJaVotaram.contains(idEleitor);
+}
 
     public void exibirResultado() {
         System.out.println("\n========================================");
@@ -137,6 +166,7 @@ class Urna {
         System.out.println("\n========================================");
         System.out.println("          LISTA DE CANDIDATOS           ");
         System.out.println("========================================");
+        
         for (Candidato candidato : candidatos.values()) {
             System.out.println(candidato.getNome() + " - Número: " + candidato.getNumero());
         }
