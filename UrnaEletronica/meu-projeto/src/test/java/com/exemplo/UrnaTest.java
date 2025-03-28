@@ -14,6 +14,7 @@ class UrnaTest {
         urna = Urna.getInstance();
     }
 
+    
     @BeforeEach
     void setUp_Eleitor() {
         Eleitor.registrarVoto("12345"); // Simulando que o eleitor "12345" já votou
@@ -47,13 +48,15 @@ class UrnaTest {
         urna.exibirCandidatos(); // Apenas para depuração
     }
 
+    
+
     @Test
     void testVotoValido() {
         String input = "S\n"; // Simular confirmação do voto
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
         
-        urna.votar(5, scanner);
+        urna.votar("1", 5, scanner);
         urna.exibirResultado();
     }
 
@@ -63,7 +66,7 @@ class UrnaTest {
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
         
-        urna.votar(99, scanner); // Número inválido
+        urna.votar(input, 99, scanner); // Número inválido
         urna.exibirResultado();
     }
 
@@ -73,7 +76,7 @@ class UrnaTest {
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
         
-        urna.votar(0, scanner);
+        urna.votar("", 0, scanner);
         urna.exibirResultado();
     }
 }
